@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>{{ product.name }} — ShopFlow</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:#f8fafc}
+nav{background:#1e293b;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{color:white;text-decoration:none;font-size:1.3rem;font-weight:700}.brand span{color:#f59e0b}
+.nav-links{display:flex;gap:1.5rem}.nav-links a{color:#cbd5e1;text-decoration:none;font-size:0.9rem}
+.container{max-width:1200px;margin:2rem auto;padding:0 1rem}
+.detail{display:grid;grid-template-columns:1fr 1fr;gap:3rem;background:white;border-radius:12px;padding:2rem;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.detail img{width:100%;border-radius:10px}
+.btn{display:inline-block;padding:0.75rem 1.5rem;background:#2563eb;color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;text-decoration:none}
+</style></head>
+<body>
+<nav>
+  <a href="/shop" class="brand">🛍️ Shop<span>Flow</span></a>
+  <div class="nav-links">
+    {% if user %}<a href="/cart">🛒 Cart ({{ cart_count }})</a><a href="/auth/logout">Logout</a>
+    {% else %}<a href="/auth/login">Login</a>{% endif %}
+  </div>
+</nav>
+<div class="container">
+  <p style="margin-bottom:1.5rem"><a href="/shop" style="color:#2563eb">← Back to Shop</a></p>
+  <div class="detail">
+    <img src="{{ product.image_url or 'https://via.placeholder.com/600x400' }}" alt="{{ product.name }}">
+    <div>
+      <div style="font-size:0.8rem;color:#64748b;text-transform:uppercase;margin-bottom:0.5rem">{{ product.category }}</div>
+      <h1 style="font-size:1.8rem;color:#1e293b;margin-bottom:1rem">{{ product.name }}</h1>
+      <div style="font-size:2rem;font-weight:800;color:#2563eb;margin-bottom:1rem">₹{{ "%.2f"|format(product.price) }}</div>
+      <p style="color:#64748b;line-height:1.7;margin-bottom:1.5rem">{{ product.description }}</p>
+      <div style="margin-bottom:1.5rem;color:{{ '#10b981' if product.stock > 0 else '#ef4444' }};font-weight:600">
+        {{ 'In Stock ('+product.stock|string+' available)' if product.stock > 0 else 'Out of Stock' }}
+      </div>
+      {% if user and product.stock > 0 %}
+      <form method="POST" action="/cart/add/{{ product.id }}" style="display:flex;gap:1rem;align-items:center">
+        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" style="width:80px;padding:0.6rem;border:1px solid #e2e8f0;border-radius:8px;font-size:1rem">
+        <button type="submit" class="btn" style="flex:1">🛒 Add to Cart</button>
+      </form>
+      {% elif not user %}
+      <a href="/auth/login" class="btn" style="display:block;text-align:center">Login to Purchase</a>
+      {% else %}
+      <button class="btn" style="background:#e2e8f0;color:#64748b;cursor:not-allowed;width:100%">Out of Stock</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+</body></html>

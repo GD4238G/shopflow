@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ShopFlow Login</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1e293b,#2563eb);min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:white;border-radius:12px;padding:2.5rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.logo{text-align:center;margin-bottom:2rem}
+.logo h1{font-size:1.8rem;color:#1e293b}.logo span{color:#2563eb}
+.logo p{color:#64748b;font-size:0.9rem;margin-top:0.25rem}
+.form-group{margin-bottom:1.25rem}
+label{display:block;font-size:0.875rem;font-weight:600;color:#1e293b;margin-bottom:0.4rem}
+input{width:100%;padding:0.7rem 1rem;border:1px solid #e2e8f0;border-radius:8px;font-size:0.95rem;outline:none}
+input:focus{border-color:#2563eb}
+.btn{width:100%;padding:0.75rem;background:#2563eb;color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.5rem}
+.btn:hover{background:#1d4ed8}
+.link{text-align:center;margin-top:1rem;font-size:0.875rem;color:#64748b}
+.link a{color:#2563eb;font-weight:600;text-decoration:none}
+.alert{padding:0.75rem 1rem;border-radius:8px;margin-bottom:1rem;font-size:0.875rem}
+.error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.success{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+.demo{margin-top:1rem;padding:0.75rem;background:#f0fdf4;border-radius:8px;font-size:0.8rem;text-align:center;color:#64748b;border:1px solid #bbf7d0}
+</style></head>
+<body>
+<div class="card">
+  <div class="logo">
+    <h1>🛍️ Shop<span>Flow</span></h1>
+    <p>Sign in to your account</p>
+  </div>
+  {% if error %}<div class="alert error">{{ error }}</div>{% endif %}
+  {% if success %}<div class="alert success">{{ success }}</div>{% endif %}
+  <form method="POST" action="/auth/login">
+    <div class="form-group"><label>Email Address</label>
+    <input type="email" name="email" placeholder="you@example.com" required></div>
+    <div class="form-group"><label>Password</label>
+    <input type="password" name="password" placeholder="Your password" required></div>
+    <button type="submit" class="btn">Sign In</button>
+  </form>
+  <p class="link">New customer? <a href="/auth/register">Create account</a></p>
+  <div class="demo"><strong>Admin:</strong> admin@shopflow.com / Admin@1234</div>
+</div>
+</body></html>

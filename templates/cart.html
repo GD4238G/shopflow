@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Cart — ShopFlow</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:#f8fafc}
+nav{background:#1e293b;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{color:white;text-decoration:none;font-size:1.3rem;font-weight:700}.brand span{color:#f59e0b}
+.nav-links{display:flex;gap:1.5rem}.nav-links a{color:#cbd5e1;text-decoration:none;font-size:0.9rem}
+.container{max-width:1200px;margin:2rem auto;padding:0 1rem}
+table{width:100%;background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,0.1);border-collapse:collapse;overflow:hidden}
+th{background:#1e293b;color:white;padding:1rem;text-align:left;font-size:0.875rem}
+td{padding:1rem;border-bottom:1px solid #e2e8f0;font-size:0.9rem;vertical-align:middle}
+.summary{background:white;border-radius:10px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.layout{display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start}
+.btn{padding:0.6rem 1.2rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.9rem}
+.btn-danger{background:#ef4444;color:white}
+.btn-success{background:#10b981;color:white;width:100%;padding:0.75rem;font-size:1rem}
+input[type=number]{width:60px;padding:4px;border:1px solid #e2e8f0;border-radius:4px}
+textarea{width:100%;padding:0.7rem;border:1px solid #e2e8f0;border-radius:8px;font-size:0.9rem;resize:vertical}
+label{display:block;font-size:0.875rem;font-weight:600;margin-bottom:0.4rem;color:#1e293b}
+</style></head>
+<body>
+<nav>
+  <a href="/shop" class="brand">🛍️ Shop<span>Flow</span></a>
+  <div class="nav-links">
+    <a href="/cart" style="color:#f59e0b">🛒 Cart ({{ cart_count }})</a>
+    <a href="/cart/orders">My Orders</a>
+    <a href="/auth/logout">Logout ({{ user.name }})</a>
+  </div>
+</nav>
+<div class="container">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#1e293b;margin-bottom:1.5rem">Shopping Cart</h2>
+  {% if items %}
+  <div class="layout">
+    <table>
+      <thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th><th></th></tr></thead>
+      <tbody>
+      {% for item in items %}
+      <tr>
+        <td><div style="display:flex;align-items:center;gap:0.75rem">
+          <img src="{{ item.image_url or 'https://via.placeholder.com/60' }}" style="width:60px;height:60px;object-fit:cover;border-radius:8px">
+          <strong>{{ item.name }}</strong>
+        </div></td>
+        <td>₹{{ "%.2f"|format(item.price) }}</td>
+        <td><form method="POST" action="/cart/update/{{ item.id }}" style="display:inline">
+          <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="99" onchange="this.form.submit()">
+        </form></td>
+        <td><strong>₹{{ "%.2f"|format(item.subtotal) }}</strong></td>
+        <td><form method="POST" action="/cart/remove/{{ item.id }}">
+          <button type="submit" class="btn btn-danger">Remove</button>
+        </form></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div class="summary">
+      <h3 style="margin-bottom:1.25rem">Order Summary</h3>
+      <div style="display:flex;justify-content:space-between;margin-bottom:0.75rem;font-size:0.9rem;color:#64748b"><span>Subtotal</span><span>₹{{ "%.2f"|format(total) }}</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:0.75rem;font-size:0.9rem;color:#64748b"><span>Shipping</span><span style="color:#10b981">FREE</span></div>
+      <hr style="margin:1rem 0;border-color:#e2e8f0">
+      <div style="display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;margin-bottom:1.5rem"><span>Total</span><span style="color:#2563eb">₹{{ "%.2f"|format(total) }}</span></div>
+      <form method="POST" action="/cart/checkout">
+        <div style="margin-bottom:1rem"><label>Delivery Address</label>
+        <textarea name="address" rows="3" placeholder="Enter your full address..." required></textarea></div>
+        <button type="submit" class="btn btn-success">Place Order ✓</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:4rem;color:#64748b;background:white;border-radius:10px">
+    <div style="font-size:4rem">🛒</div>
+    <h3 style="margin:1rem 0">Your cart is empty</h3>
+    <a href="/shop" style="display:inline-block;padding:0.75rem 1.5rem;background:#2563eb;color:white;border-radius:8px;text-decoration:none;font-weight:600">Continue Shopping</a>
+  </div>
+  {% endif %}
+</div>
+</body></html>

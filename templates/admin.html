@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Admin — ShopFlow</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:#f8fafc;display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.sidebar{background:#1e293b;color:white;padding:1.5rem 0}
+.brand{padding:0 1.5rem 1.5rem;border-bottom:1px solid #334155;font-size:1.1rem;font-weight:700}
+.brand span{color:#f59e0b}
+.sidebar a{display:block;padding:0.75rem 1.5rem;color:#94a3b8;text-decoration:none;font-size:0.9rem}
+.sidebar a:hover{color:white;background:#334155}
+.content{padding:2rem}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:2rem}
+.stat{background:white;border-radius:10px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.stat-label{font-size:0.8rem;color:#64748b;text-transform:uppercase}
+.stat-value{font-size:2rem;font-weight:700;color:#1e293b;margin-top:0.25rem}
+table{width:100%;border-collapse:collapse}
+th{background:#f8fafc;padding:0.75rem 1rem;text-align:left;font-size:0.8rem;color:#64748b;border-bottom:1px solid #e2e8f0}
+td{padding:0.85rem 1rem;border-bottom:1px solid #e2e8f0;font-size:0.875rem}
+.table-card{background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,0.1);overflow:hidden;margin-bottom:2rem}
+.table-header{padding:1rem 1.5rem;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}
+.table-header h3{font-size:1rem;color:#1e293b}
+.btn{padding:0.35rem 0.75rem;border:none;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;text-decoration:none;display:inline-block}
+.btn-blue{background:#2563eb;color:white}
+</style></head>
+<body>
+<nav class="sidebar">
+  <div class="brand">Shop<span>Flow</span> Admin</div>
+  <a href="/admin/dashboard">📊 Dashboard</a>
+  <a href="/admin/products">📦 Products</a>
+  <a href="/admin/orders">🛒 Orders</a>
+  <a href="/admin/users">👥 Users</a>
+  <a href="/shop">🏪 View Store</a>
+  <a href="/auth/logout">🚪 Logout</a>
+</nav>
+<div class="content">
+  <div style="margin-bottom:2rem"><h1 style="font-size:1.5rem;color:#1e293b">Dashboard</h1><p style="color:#64748b">Welcome back, {{ user.name }}</p></div>
+  <div class="stats">
+    <div class="stat" style="border-left:4px solid #2563eb"><div class="stat-label">Total Users</div><div class="stat-value">{{ total_users }}</div></div>
+    <div class="stat" style="border-left:4px solid #10b981"><div class="stat-label">Products</div><div class="stat-value">{{ total_products }}</div></div>
+    <div class="stat" style="border-left:4px solid #f59e0b"><div class="stat-label">Orders</div><div class="stat-value">{{ total_orders }}</div></div>
+    <div class="stat" style="border-left:4px solid #ef4444"><div class="stat-label">Revenue (₹)</div><div class="stat-value">{{ "%.0f"|format(revenue) }}</div></div>
+  </div>
+  <div class="table-card">
+    <div class="table-header"><h3>Recent Orders</h3><a href="/admin/orders" class="btn btn-blue">View All</a></div>
+    <table>
+      <thead><tr><th>ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+      {% for o in recent_orders %}
+      <tr><td>#{{ o.id }}</td><td>{{ o.user_name }}</td><td>₹{{ "%.2f"|format(o.total_amount) }}</td><td>{{ o.status|capitalize }}</td><td>{{ o.created_at.strftime('%d %b %Y') }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="table-card">
+    <div class="table-header"><h3>⚠️ Low Stock</h3></div>
+    <table>
+      <thead><tr><th>Product</th><th>Category</th><th>Stock</th></tr></thead>
+      <tbody>
+      {% for p in low_stock %}
+      <tr><td>{{ p.name }}</td><td>{{ p.category }}</td><td style="color:#ef4444;font-weight:700">{{ p.stock }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</body></html>

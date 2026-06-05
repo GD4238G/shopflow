@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>My Orders — ShopFlow</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:#f8fafc}
+nav{background:#1e293b;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{color:white;text-decoration:none;font-size:1.3rem;font-weight:700}.brand span{color:#f59e0b}
+.nav-links{display:flex;gap:1.5rem}.nav-links a{color:#cbd5e1;text-decoration:none;font-size:0.9rem}
+.container{max-width:1000px;margin:2rem auto;padding:0 1rem}
+table{width:100%;background:white;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,0.1);border-collapse:collapse;overflow:hidden}
+th{background:#1e293b;color:white;padding:0.75rem 1rem;text-align:left;font-size:0.875rem}
+td{padding:0.85rem 1rem;border-bottom:1px solid #e2e8f0;font-size:0.875rem}
+</style></head>
+<body>
+<nav>
+  <a href="/shop" class="brand">🛍️ Shop<span>Flow</span></a>
+  <div class="nav-links">
+    <a href="/cart">🛒 Cart ({{ cart_count }})</a>
+    <a href="/auth/logout">Logout</a>
+  </div>
+</nav>
+<div class="container">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#1e293b;margin-bottom:1.5rem">My Orders</h2>
+  {% if orders %}
+  <table>
+    <thead><tr><th>Order ID</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for o in orders %}
+    <tr>
+      <td><strong>#{{ o.id }}</strong></td>
+      <td>{{ o.created_at.strftime('%d %b %Y') }}</td>
+      <td>{{ o.item_count }} items</td>
+      <td><strong>₹{{ "%.2f"|format(o.total_amount) }}</strong></td>
+      <td><span style="padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:{% if o.status=='delivered' %}#d1fae5{% elif o.status=='shipped' %}#e0e7ff{% elif o.status=='processing' %}#dbeafe{% elif o.status=='cancelled' %}#fee2e2{% else %}#fef3c7{% endif %};color:{% if o.status=='delivered' %}#065f46{% elif o.status=='shipped' %}#3730a3{% elif o.status=='processing' %}#1e40af{% elif o.status=='cancelled' %}#991b1b{% else %}#92400e{% endif %}">{{ o.status|capitalize }}</span></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="text-align:center;padding:4rem;color:#64748b;background:white;border-radius:10px">
+    <div style="font-size:4rem">📦</div>
+    <h3 style="margin:1rem 0">No orders yet</h3>
+    <a href="/shop" style="display:inline-block;padding:0.75rem 1.5rem;background:#2563eb;color:white;border-radius:8px;text-decoration:none;font-weight:600">Start Shopping</a>
+  </div>
+  {% endif %}
+</div>
+</body></html>
